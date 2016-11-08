@@ -1,6 +1,6 @@
 #dbWatson Makefile
 #Author: Kevin Klein, Riesa
-.PHONY: all clean
+.PHONY: all test clean
 
 CC := g++
 CCC := gcc
@@ -11,6 +11,7 @@ SRCDIR := src
 INCDIR := include
 OBJDIR := obj
 BINDIR := bin
+TSTDIR := test
 
 OS := $(shell uname)
 
@@ -30,6 +31,9 @@ OBJFILES := $(subst $(SRCDIR),$(OBJDIR),$(SOURCES:.cpp=.o))
 OBJFILES := $(OBJFILES:.c=.o) #*.c-Files
 
 all: $(BINDIR)/$(TARGET)
+
+test: clean all
+	cd $(TSTDIR); ../$(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(OBJFILES)
 	mkdir -p $(BINDIR)
