@@ -1,8 +1,9 @@
 #dbWatson Makefile
 #Author: Kevin Klein, Riesa
-.PHONY: all clean
+.PHONY: all test clean
 
 CC := g++
+CCC := gcc
 CFLAGS := -c -Wall
 TARGET := dbWatson
 
@@ -10,6 +11,7 @@ SRCDIR := src
 INCDIR := include
 OBJDIR := obj
 BINDIR := bin
+TSTDIR := test
 
 OS := $(shell uname)
 
@@ -23,10 +25,15 @@ LIBFILES := $(addprefix -l, $(LIBFILES))
 LPATHS := $(addprefix -L, $(LPATHS))
 IPATHS := $(addprefix -I, $(IPATHS))
 
-SOURCES=$(wildcard $(SRCDIR)/*.cpp)
-OBJFILES=$(subst $(SRCDIR),$(OBJDIR),$(SOURCES:.cpp=.o))
+SOURCES := $(wildcard $(SRCDIR)/*.cpp) \
+           $(wildcard $(SRCDIR)/*.c)
+OBJFILES := $(subst $(SRCDIR),$(OBJDIR),$(SOURCES:.cpp=.o))
+OBJFILES := $(OBJFILES:.c=.o) #*.c-Files
 
 all: $(BINDIR)/$(TARGET)
+
+test: clean all
+	cd $(TSTDIR); ../$(BINDIR)/$(TARGET)
 
 $(BINDIR)/$(TARGET): $(OBJFILES)
 	mkdir -p $(BINDIR)
@@ -35,6 +42,10 @@ $(BINDIR)/$(TARGET): $(OBJFILES)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -I$(INCDIR) $(IPATHS)  $< -o $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	mkdir -p $(OBJDIR)
+	$(CCC) $(CFLAGS) -I$(INCDIR) $(IPATHS)  $< -o $@
 
 clean:
 	rm -r -f $(OBJDIR)
