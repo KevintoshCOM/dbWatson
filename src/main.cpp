@@ -45,23 +45,12 @@ int main(
         std::cout << "Can't load dbWatson.ini from project dir! \n";
         return 1;
     }
-    
-    std::cout << "Config loaded: "
-              << "dbServer = "
-              << reader.Get( "default", "dbServer", "UNKNOWN" )
-	      << ", dbName = "
-              << reader.Get( "default", "dbName", "UNKNOWN" )
-	      << ", dbUsr = "
-              << reader.Get( "default", "dbUsr", "UNKNOWN" )
-	      << ", dbPasswd = "
-              << reader.Get( "default", "dbPasswd", "UNKNOWN" )
-	      << "\n";
 
     DbData dbd = {
-      L"Test",
-      L"Test",
-      L"Test",
-      L"Test"
+      reader.GetW( "default", "dbServer", "UNKNOWN" ),
+      reader.GetW( "default", "dbName", "UNKNOWN" ),
+      reader.GetW( "default", "dbUsr", "UNKNOWN" ),
+      reader.GetW( "default", "dbPasswd", "UNKNOWN" )
     };
 
     std::unique_ptr<DbConnector> dbC = std::make_unique<PgConnector>( dbd );

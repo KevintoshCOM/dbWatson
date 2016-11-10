@@ -28,6 +28,12 @@ public:
     std::string Get(const std::string& section, const std::string& name,
                     const std::string& default_value) const;
 
+    //*Kevin Klein
+    //Added to support Unicode
+    // Get a wide string value from INI file, returning default_value if not found.
+    std::wstring GetW(const std::string& section, const std::string& name,
+                    const std::string& default_value) const;
+    
     // Get an integer (long) value from INI file, returning default_value if
     // not found or not a valid integer (decimal "1234", "-1234", or hex "0x4d2").
     long GetInteger(const std::string& section, const std::string& name, long default_value) const;

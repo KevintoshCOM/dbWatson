@@ -35,20 +35,20 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 struct DbData {
-  const wchar_t* dbServer;
-  const wchar_t* dbName;
-  const wchar_t* dbUsr;
-  const wchar_t* dbPwd;
+  std::wstring dbServer;
+  std::wstring dbName;
+  std::wstring dbUsr;
+  std::wstring dbPwd;
 };
 
 struct DbColDesc {
-  const wchar_t* colName;
-  const wchar_t* colType;
-  const wchar_t* colLength;
+  std::wstring colName;
+  std::wstring colType;
+  std::wstring colLength;
 };
 
 struct DbTableDesc {
-  const wchar_t* tblName;
+  std::wstring tblName;
   std::list<DbColDesc> tblCols;
 };
 
