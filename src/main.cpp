@@ -34,15 +34,32 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "INIReader.h"
 #include "DbConnector.h"
 
+std::map<std::wstring, DbType> dbTypeMapping {
+  { L"postgres", DbType::postgres }
+};
+
 int main(
     int argc,
     char* argv[] )
 {
     INIReader reader("dbWatson.ini");
-
+    
     if ( reader.ParseError() < 0 )
     {
         std::cout << "Can't load dbWatson.ini from project dir! \n";
+        return 1;
+    }
+
+    std::wstring dbType = reader.GetW( "default", "dbType", "UNKNOWN" );
+    DbType dbt;
+
+    try
+    {
+      dbt = dbTypeMapping.at( dbType );
+    }
+    catch( const std::out_of_range& )
+    {
+        std::cout << "Database type not supported! \n";
         return 1;
     }
 
@@ -52,8 +69,16 @@ int main(
       reader.GetW( "default", "dbUsr", "UNKNOWN" ),
       reader.GetW( "default", "dbPasswd", "UNKNOWN" )
     };
-
-    std::unique_ptr<DbConnector> dbC = std::make_unique<PgConnector>( dbd );
+    
+    std::unique_ptr<DbConnector> dbC;
+    
+    switch( dbt ) 
+    {
+    case DbType::postgres:
+      dbC = std::make_unique<PgConnector>( dbd );
+      break;
+    };
+    
     dbC.get()->initDbConnection();
     
     return 0;

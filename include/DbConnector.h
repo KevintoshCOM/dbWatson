@@ -32,6 +32,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define DBCONNECTOR_H
 
 #include <list>
+#include <map>
 #include <string>
 
 struct DbData {
@@ -50,6 +51,10 @@ struct DbColDesc {
 struct DbTableDesc {
   std::wstring tblName;
   std::list<DbColDesc> tblCols;
+};
+
+enum class DbType {
+  postgres
 };
 
 class DbConnector {
