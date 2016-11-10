@@ -28,44 +28,49 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED O
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <iostream>
-#include <memory>
+#ifndef DBCONNECTOR_H
+#define DBCONNECTOR_H
 
-#include "INIReader.h"
-#include "DbConnector.h"
+#include <list>
+#include <string>
 
-int main(
-    int argc,
-    char* argv[] )
-{
-    INIReader reader("dbWatson.ini");
+struct DbData {
+  const wchar_t* dbServer;
+  const wchar_t* dbName;
+  const wchar_t* dbUsr;
+  const wchar_t* dbPwd;
+};
 
-    if ( reader.ParseError() < 0 )
-    {
-        std::cout << "Can't load dbWatson.ini from project dir! \n";
-        return 1;
-    }
-    
-    std::cout << "Config loaded: "
-              << "dbServer = "
-              << reader.Get( "default", "dbServer", "UNKNOWN" )
-	      << ", dbName = "
-              << reader.Get( "default", "dbName", "UNKNOWN" )
-	      << ", dbUsr = "
-              << reader.Get( "default", "dbUsr", "UNKNOWN" )
-	      << ", dbPasswd = "
-              << reader.Get( "default", "dbPasswd", "UNKNOWN" )
-	      << "\n";
+struct DbColDesc {
+  const wchar_t* colName;
+  const wchar_t* colType;
+  const wchar_t* colLength;
+};
 
-    DbData dbd = {
-      L"Test",
-      L"Test",
-      L"Test",
-      L"Test"
-    };
+struct DbTableDesc {
+  const wchar_t* tblName;
+  std::list<DbColDesc> tblCols;
+};
 
-    std::unique_ptr<DbConnector> dbC = std::make_unique<PgConnector>( dbd );
-    dbC.get()->initDbConnection();
-    
-    return 0;
-}
+class DbConnector {
+ public:
+  explicit DbConnector( DbData dbData ) :dbData{dbData} {};
+  virtual bool initDbConnection() = 0;
+  virtual std::list<DbTableDesc> queryTableDesc() = 0;
+ protected:
+  DbData dbData;
+  
+  virtual std::string buildCntStr() = 0;
+};
+
+class PgConnector : public DbConnector {
+  using DbConnector::DbConnector;
+  
+ public:
+  bool initDbConnection() override;
+  std::list<DbTableDesc> queryTableDesc() override;
+ protected:
+  std::string buildCntStr() override;
+};
+
+#endif //DBCONNECTOR_H

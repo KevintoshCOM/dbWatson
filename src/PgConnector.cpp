@@ -29,43 +29,29 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <iostream>
-#include <memory>
 
-#include "INIReader.h"
 #include "DbConnector.h"
 
-int main(
-    int argc,
-    char* argv[] )
+bool
+PgConnector::initDbConnection()
 {
-    INIReader reader("dbWatson.ini");
+  std::wcout << this->dbData.dbServer << '\n';
+  
+  return true;
+};
 
-    if ( reader.ParseError() < 0 )
-    {
-        std::cout << "Can't load dbWatson.ini from project dir! \n";
-        return 1;
-    }
-    
-    std::cout << "Config loaded: "
-              << "dbServer = "
-              << reader.Get( "default", "dbServer", "UNKNOWN" )
-	      << ", dbName = "
-              << reader.Get( "default", "dbName", "UNKNOWN" )
-	      << ", dbUsr = "
-              << reader.Get( "default", "dbUsr", "UNKNOWN" )
-	      << ", dbPasswd = "
-              << reader.Get( "default", "dbPasswd", "UNKNOWN" )
-	      << "\n";
+std::list<DbTableDesc>
+PgConnector::queryTableDesc()
+{
+  std::list<DbTableDesc> tbls;
+  
+  return tbls;
+};
 
-    DbData dbd = {
-      L"Test",
-      L"Test",
-      L"Test",
-      L"Test"
-    };
-
-    std::unique_ptr<DbConnector> dbC = std::make_unique<PgConnector>( dbd );
-    dbC.get()->initDbConnection();
-    
-    return 0;
-}
+std::string
+PgConnector::buildCntStr()
+{
+  std::string str;
+  
+  return str;
+}; 
