@@ -28,16 +28,31 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED O
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <iostream>
+#include <sstream>
+#include <codecvt>
+#include <libpq-fe.h>
 
 #include "DbConnector.h"
+
+PgConnector::~PgConnector()
+{
+  PQfinish( this->m_cnt );
+};
 
 bool
 PgConnector::initDbConnection()
 {
-  std::wcout << this->dbData.dbPort << '\n';
+  std::wstring cntStr = buildCntStr();
+
+  //libpq won't take wstring
+  using cvt_type = std::codecvt_utf8<wchar_t>;
+  std::wstring_convert<cvt_type, wchar_t> cvt;
+
+  std::string cntStrAnsi = cvt.to_bytes( cntStr );
   
-  return true;
+  this->m_cnt = PQconnectdb( cntStrAnsi.c_str() );
+  
+  return PQstatus( this->m_cnt ) == CONNECTION_OK;
 };
 
 std::list<DbTableDesc>
@@ -48,10 +63,26 @@ PgConnector::queryTableDesc()
   return tbls;
 };
 
-std::string
+std::wstring
 PgConnector::buildCntStr()
 {
-  std::string str;
+  constexpr int timeout = 10;
   
-  return str;
+  std::wstringstream sstream;
+
+  sstream << L"host="
+          << this->dbData.dbServer
+          << L" port="
+          << this->dbData.dbPort
+          << L" dbname="
+          << this->dbData.dbName
+	  << L" connect_timeout="
+          << timeout
+          << L" user="
+          << this->dbData.dbUsr
+          << " password="
+          << this->dbData.dbPwd;
+    
+  
+  return sstream.str();
 }; 

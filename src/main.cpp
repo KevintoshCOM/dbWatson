@@ -83,7 +83,9 @@ int main(
       return 1;
     };
     
-    dbC.get()->initDbConnection();
+    bool cntScs = dbC.get()->initDbConnection();
+
+    std::cout << cntScs;
     
     return 0;
 }

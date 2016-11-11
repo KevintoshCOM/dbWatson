@@ -58,25 +58,33 @@ enum class DbType {
   postgres
 };
 
+//forward declare
+struct pg_conn;
+typedef struct pg_conn PGconn;
+
 class DbConnector {
  public:
   explicit DbConnector( DbData dbData ) :dbData{dbData} {};
+  virtual ~DbConnector() {};
   virtual bool initDbConnection() = 0;
   virtual std::list<DbTableDesc> queryTableDesc() = 0;
  protected:
   DbData dbData;
   
-  virtual std::string buildCntStr() = 0;
+  virtual std::wstring buildCntStr() = 0;
 };
 
 class PgConnector : public DbConnector {
   using DbConnector::DbConnector;
   
  public:
+  ~PgConnector();
   bool initDbConnection() override;
   std::list<DbTableDesc> queryTableDesc() override;
  protected:
-  std::string buildCntStr() override;
+  std::wstring buildCntStr() override;
+ private:
+  PGconn* m_cnt;
 };
 
 #endif //DBCONNECTOR_H
