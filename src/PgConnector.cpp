@@ -35,7 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 bool
 PgConnector::initDbConnection()
 {
-  std::wcout << this->dbData.dbServer << '\n';
+  std::wcout << this->dbData.dbPort << '\n';
   
   return true;
 };

@@ -42,7 +42,7 @@ int main(
     int argc,
     char* argv[] )
 {
-    INIReader reader("dbWatson.ini");
+    INIReader reader( "dbWatson.ini" );
     
     if ( reader.ParseError() < 0 )
     {
@@ -65,6 +65,7 @@ int main(
 
     DbData dbd = {
       reader.GetW( "default", "dbServer", "UNKNOWN" ),
+      reader.GetInteger( "default", "dbPort", -1 ),
       reader.GetW( "default", "dbName", "UNKNOWN" ),
       reader.GetW( "default", "dbUsr", "UNKNOWN" ),
       reader.GetW( "default", "dbPasswd", "UNKNOWN" )
@@ -77,6 +78,9 @@ int main(
     case DbType::postgres:
       dbC = std::make_unique<PgConnector>( dbd );
       break;
+    default:
+      std::cout << "Implementation Error!";
+      return 1;
     };
     
     dbC.get()->initDbConnection();

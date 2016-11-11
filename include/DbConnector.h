@@ -37,6 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 struct DbData {
   std::wstring dbServer;
+  long dbPort;
   std::wstring dbName;
   std::wstring dbUsr;
   std::wstring dbPwd;
