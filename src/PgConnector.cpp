@@ -31,8 +31,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <codecvt>
 #include <libpq-fe.h>
+#include <iostream>
 
 #include "DbConnector.h"
+#include "common.h"
 
 PgConnector::~PgConnector()
 {
@@ -48,21 +50,67 @@ PgConnector::initDbConnection()
   using cvt_type = std::codecvt_utf8<wchar_t>;
   std::wstring_convert<cvt_type, wchar_t> cvt;
 
-  std::string cntStrAnsi = cvt.to_bytes( cntStr );
+  std::string cntStrAnsi = wstring_tostring( cntStr );
   
   this->m_cnt = PQconnectdb( cntStrAnsi.c_str() );
   
   return PQstatus( this->m_cnt ) == CONNECTION_OK;
 };
 
+bool
+PgConnector::isConnected()
+{
+  return PQstatus( this->m_cnt ) == CONNECTION_OK;
+}; 
+
 std::list<DbTableDesc>
 PgConnector::queryTableDesc()
 {
+  constexpr char sql[] = "SELECT table_name, table_type "
+                         "FROM information_schema.tables "
+                         "WHERE table_schema NOT IN ("
+                         " 'pg_catalog',"
+                         " 'information_schema'"
+                         ");";
+  
   std::list<DbTableDesc> tbls;
+
+  if ( isConnected() )
+  {
+    PGresult* qRes = PQexec( this->m_cnt, sql );
+
+    if ( PQresultStatus( qRes ) == PGRES_TUPLES_OK  )
+    {
+      int rows = PQntuples( qRes );
+      int cols = PQnfields( qRes );
+
+      for ( int i = 0; i < rows; ++i )
+      {
+        if ( cols == 2 )
+	{
+	  std::wstring tblName = char_towstring( PQgetvalue( qRes, i, 0 ) );
+	  std::wstring tblType = char_towstring( PQgetvalue( qRes, i, 1 ) );
+
+	  DbTableDesc tblDesc = { tblName, tblType, queryColDesc( tblName  ) };
+
+	  tbls.push_back( tblDesc );
+        }
+      }  
+    }
+  }
   
   return tbls;
 };
 
+std::list<DbColDesc>
+PgConnector::queryColDesc(
+    std::wstring tblName )
+{
+  std::list<DbColDesc> cls;
+
+  return cls;
+};
+  
 std::wstring
 PgConnector::buildCntStr()
 {

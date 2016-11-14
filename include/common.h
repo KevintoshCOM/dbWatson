@@ -28,67 +28,12 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED O
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef DBCONNECTOR_H
-#define DBCONNECTOR_H
+#ifndef COMMON_H
+#define COMMON_H 
 
-#include <list>
-#include <map>
 #include <string>
 
-struct DbData {
-  std::wstring dbServer;
-  long dbPort;
-  std::wstring dbName;
-  std::wstring dbUsr;
-  std::wstring dbPwd;
-};
+std::wstring char_towstring( char* str );
+std::string wstring_tostring( std::wstring wstr );
 
-struct DbColDesc {
-  std::wstring colName;
-  std::wstring colType;
-  std::wstring colLength;
-};
-
-struct DbTableDesc {
-  std::wstring tblName;
-  std::wstring tblType;
-  std::list<DbColDesc> tblCols;
-};
-
-enum class DbType {
-  postgres
-};
-
-//forward declare
-struct pg_conn;
-typedef struct pg_conn PGconn;
-
-class DbConnector {
- public:
-  explicit DbConnector( DbData dbData ) :dbData{dbData} {};
-  virtual ~DbConnector() {};
-  virtual bool initDbConnection() = 0;
-  virtual std::list<DbTableDesc> queryTableDesc() = 0;
- protected:
-  DbData dbData;
-  
-  virtual std::wstring buildCntStr() = 0;
-  virtual bool isConnected() = 0;
-};
-
-class PgConnector : public DbConnector {
-  using DbConnector::DbConnector;
-  
- public:
-  ~PgConnector();
-  bool initDbConnection() override;
-  std::list<DbTableDesc> queryTableDesc() override;
- protected:
-  std::wstring buildCntStr() override;
-  bool isConnected() override;
-  std::list<DbColDesc> queryColDesc( std::wstring tblName );
- private:
-  PGconn* m_cnt;
-};
-
-#endif //DBCONNECTOR_H
+#endif //COMMON_H

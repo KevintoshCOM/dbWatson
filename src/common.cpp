@@ -28,75 +28,25 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED O
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <iostream>
-#include <memory>
 #include <locale>
 #include <codecvt>
 
-#include "INIReader.h"
-#include "DbConnector.h"
+#include "common.h"
 
-std::map<std::wstring, DbType> dbTypeMapping {
-  { L"postgres", DbType::postgres }
-};
-
-int main(
-    int argc,
-    char* argv[] )
+std::wstring
+char_towstring(
+    char* str )
 {
-    INIReader reader( "dbWatson.ini" );
-    
-    if ( reader.ParseError() < 0 )
-    {
-        std::cout << "Can't load dbWatson.ini from project dir! \n";
-        return 1;
-    }
+    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
 
-    std::wstring dbType = reader.GetW( "default", "dbType", "UNKNOWN" );
-    DbType dbt;
+    return cnv.from_bytes( std::string( str ) );
+}
 
-    try
-    {
-      dbt = dbTypeMapping.at( dbType );
-    }
-    catch( const std::out_of_range& )
-    {
-        std::cout << "Database type not supported! \n";
-        return 1;
-    }
+std::string
+wstring_tostring(
+    std::wstring wstr )
+{
+    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
 
-    DbData dbd = {
-      reader.GetW( "default", "dbServer", "UNKNOWN" ),
-      reader.GetInteger( "default", "dbPort", -1 ),
-      reader.GetW( "default", "dbName", "UNKNOWN" ),
-      reader.GetW( "default", "dbUsr", "UNKNOWN" ),
-      reader.GetW( "default", "dbPasswd", "UNKNOWN" )
-    };
-    
-    std::unique_ptr<DbConnector> dbC;
-    
-    switch( dbt ) 
-    {
-    case DbType::postgres:
-      dbC = std::make_unique<PgConnector>( dbd );
-      break;
-    default:
-      std::cout << "Implementation Error!";
-      return 1;
-    };
-    
-    bool cntScs = dbC.get()->initDbConnection();
-
-    std::list<DbTableDesc> tbls;
-    if ( cntScs ) 
-    {
-      tbls = dbC.get()->queryTableDesc();
-    }
-
-    for ( DbTableDesc tbl : tbls  )
-    {
-      std::wcout << tbl.tblName;
-    }
-
-    return 0;
+    return cnv.to_bytes( wstr );
 }
