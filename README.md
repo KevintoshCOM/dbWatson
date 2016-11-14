@@ -2,7 +2,7 @@
 
 ### Zielstellung
 
-Das Kommandozeilen-basierte Werkzeug dbWatson ermöglicht es, Meta-Informationen aus Datenbanktabellen auszulesen und als XML-Struktur auszugeben. Dies beeinhaltet z. B. Informationen wie Tabellennamen, Namen der Datenfelder und Datentypen.
+Das Kommandozeilen-basierte Werkzeug dbWatson ermöglicht es, Meta-Informationen aus Datenbanktabellen auszulesen und als XML-Struktur auszugeben. Dies beinhaltet z. B. Informationen wie Tabellennamen, Namen der Datenfelder und Datentypen.
 Gerade bei konmplexen Datenbanken kann dbWatson helfen, die Datenstrukturen zu dokumentieren. Dies kann eine wertvolle Hilfe für Datenbank-Entwickler und Content-Manager sein.
 
 ### Technische Informationen
