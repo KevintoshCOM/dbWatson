@@ -13,6 +13,7 @@ Momentan unterstützt dbWatson Postgres-Datenbanken. Eine Unterstützung von MyS
 
 * Kevin Klein [Zer0Knowdlege]
 * Tobias Donix [tobidon]
+* Leonard Franke
 
 ### Lizenz
 
