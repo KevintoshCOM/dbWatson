@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "INIReader.h"
 #include "DbConnector.h"
+#include "common.h"
 
 std::map<std::wstring, DbType> dbTypeMapping {
   { L"postgres", DbType::postgres }
@@ -52,7 +53,7 @@ int main(
         return 1;
     }
 
-    std::wstring dbType = reader.GetW( "default", "dbType", "UNKNOWN" );
+    std::wstring dbType = string_towstring( reader.Get( "default", "dbType", "UNKNOWN" ) );
     DbType dbt;
 
     try
@@ -66,11 +67,11 @@ int main(
     }
 
     DbData dbd = {
-      reader.GetW( "default", "dbServer", "UNKNOWN" ),
+      string_towstring( reader.Get( "default", "dbServer", "UNKNOWN" ) ),
       reader.GetInteger( "default", "dbPort", -1 ),
-      reader.GetW( "default", "dbName", "UNKNOWN" ),
-      reader.GetW( "default", "dbUsr", "UNKNOWN" ),
-      reader.GetW( "default", "dbPasswd", "UNKNOWN" )
+      string_towstring( reader.Get( "default", "dbName", "UNKNOWN" ) ),
+      string_towstring( reader.Get( "default", "dbUsr", "UNKNOWN" ) ),
+      string_towstring( reader.Get( "default", "dbPasswd", "UNKNOWN" ) )
     };
     
     std::unique_ptr<DbConnector> dbC;
@@ -93,9 +94,21 @@ int main(
       tbls = dbC.get()->queryTableDesc();
     }
 
+    std::wcout << std::endl << L"Test-Ausgabe:" << std::endl;
+    
     for ( DbTableDesc tbl : tbls  )
     {
-      std::wcout << tbl.tblName;
+      std::wcout << tbl.tblName << L'(' <<  tbl.tblType << L')' << std::endl;
+
+      for ( DbColDesc cl : tbl.tblCols  )
+      {
+	 std::wcout << cl.colName
+		    << L" - " << cl.colType
+	            << L'(' <<  cl.colLength << L')'
+	            << L" Default: " << cl.colDefaultVal
+	            << L" Nullable: " << cl.colNullable
+		    << std::endl;
+      }	
     }
 
     return 0;

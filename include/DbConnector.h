@@ -47,6 +47,8 @@ struct DbColDesc {
   std::wstring colName;
   std::wstring colType;
   std::wstring colLength;
+  std::wstring colDefaultVal;
+  bool colNullable;
 };
 
 struct DbTableDesc {

@@ -79,7 +79,7 @@ PgConnector::queryTableDesc()
   {
     PGresult* qRes = PQexec( this->m_cnt, sql );
 
-    if ( PQresultStatus( qRes ) == PGRES_TUPLES_OK  )
+    if ( PQresultStatus( qRes ) == PGRES_TUPLES_OK )
     {
       int rows = PQntuples( qRes );
       int cols = PQnfields( qRes );
@@ -106,8 +106,45 @@ std::list<DbColDesc>
 PgConnector::queryColDesc(
     std::wstring tblName )
 {
+  std::stringstream sstream;
+  sstream << "SELECT column_name, udt_name, character_maximum_length, column_default, is_nullable "
+          << "FROM information_schema.columns "
+          << "WHERE table_name   = '"
+          << wstring_tostring(tblName)            
+          << "' "
+          << "ORDER BY ordinal_position DESC;";
+  
   std::list<DbColDesc> cls;
 
+  if ( isConnected() )
+  {
+    PGresult* qRes = PQexec( this->m_cnt, sstream.str().c_str() );
+
+    if ( PQresultStatus( qRes ) == PGRES_TUPLES_OK )
+    {
+      int rows = PQntuples( qRes );
+      int cols = PQnfields( qRes );
+
+      for ( int i = 0; i < rows; ++i )
+      {
+        if ( cols == 5 )
+	{
+	  char yes[4] = "YES";
+	  
+	  std::wstring colName = char_towstring( PQgetvalue( qRes, i, 0 ) );
+	  std::wstring colType = char_towstring( PQgetvalue( qRes, i, 1 ) );
+	  std::wstring colLength = char_towstring( PQgetvalue( qRes, i, 2 ) );
+	  std::wstring colDefaultVal = char_towstring( PQgetvalue( qRes, i, 3 ) );
+	  bool colNullable = strcmp( PQgetvalue( qRes, i, 4 ), yes ) == 0 ? true : false;
+ 
+	  DbColDesc clDesc = { colName, colType, colLength, colDefaultVal, colNullable };
+
+	  cls.push_back( clDesc );
+        }
+      }  
+    }
+  }
+  
   return cls;
 };
   
@@ -130,7 +167,6 @@ PgConnector::buildCntStr()
           << this->dbData.dbUsr
           << " password="
           << this->dbData.dbPwd;
-    
   
   return sstream.str();
 }; 

@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 std::wstring char_towstring( char* str );
+std::wstring string_towstring( std::string str );
 std::string wstring_tostring( std::wstring wstr );
 
 #endif //COMMON_H

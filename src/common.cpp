@@ -42,6 +42,15 @@ char_towstring(
     return cnv.from_bytes( std::string( str ) );
 }
 
+std::wstring
+string_towstring(
+    std::string str )
+{
+    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
+
+    return cnv.from_bytes( str );
+}
+
 std::string
 wstring_tostring(
     std::wstring wstr )

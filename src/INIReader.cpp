@@ -31,14 +31,6 @@ string INIReader::Get(const string& section, const string& name, const string& d
     return _values.count(key) ? _values.find(key)->second : default_value;
 }
 
-wstring INIReader::GetW(const string& section, const string& name, const string& default_value) const
-{
-    string value = Get(section, name, default_value);
-
-    //return as wstring
-    return wstring(value.begin(), value.end());
-}
-
 long INIReader::GetInteger(const string& section, const string& name, long default_value) const
 {
     string valstr = Get(section, name, "");
