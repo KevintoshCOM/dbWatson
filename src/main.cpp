@@ -93,7 +93,7 @@ int main(
     {
       tbls = dbC.get()->queryTableDesc();
     }
-
+    
     std::wcout << std::endl << L"Test-Ausgabe:" << std::endl;
     
     for ( DbTableDesc tbl : tbls  )
