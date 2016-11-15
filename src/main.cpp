@@ -29,30 +29,87 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <iostream>
+#include <memory>
+#include <locale>
+#include <codecvt>
+
 #include "INIReader.h"
+#include "DbConnector.h"
+#include "common.h"
+
+std::map<std::wstring, DbType> dbTypeMapping {
+  { L"postgres", DbType::postgres }
+};
 
 int main(
     int argc,
     char* argv[] )
 {
-    INIReader reader("dbWatson.ini");
-
+    INIReader reader( "dbWatson.ini" );
+    
     if ( reader.ParseError() < 0 )
     {
         std::cout << "Can't load dbWatson.ini from project dir! \n";
         return 1;
     }
+
+    std::wstring dbType = string_towstring( reader.Get( "default", "dbType", "UNKNOWN" ) );
+    DbType dbt;
+
+    try
+    {
+      dbt = dbTypeMapping.at( dbType );
+    }
+    catch( const std::out_of_range& )
+    {
+        std::cout << "Database type not supported! \n";
+        return 1;
+    }
+
+    DbData dbd = {
+      string_towstring( reader.Get( "default", "dbServer", "UNKNOWN" ) ),
+      reader.GetInteger( "default", "dbPort", -1 ),
+      string_towstring( reader.Get( "default", "dbName", "UNKNOWN" ) ),
+      string_towstring( reader.Get( "default", "dbUsr", "UNKNOWN" ) ),
+      string_towstring( reader.Get( "default", "dbPasswd", "UNKNOWN" ) )
+    };
     
-    std::cout << "Config loaded: "
-              << "dbServer = "
-              << reader.Get( "default", "dbServer", "UNKNOWN" )
-	      << ", dbName = "
-              << reader.Get( "default", "dbName", "UNKNOWN" )
-	      << ", dbUsr = "
-              << reader.Get( "default", "dbUsr", "UNKNOWN" )
-	      << ", dbPasswd = "
-              << reader.Get( "default", "dbPasswd", "UNKNOWN" )
-	      << "\n";
+    std::unique_ptr<DbConnector> dbC;
+    
+    switch( dbt ) 
+    {
+    case DbType::postgres:
+      dbC = std::make_unique<PgConnector>( dbd );
+      break;
+    default:
+      std::cout << "Implementation Error!";
+      return 1;
+    };
+    
+    bool cntScs = dbC.get()->initDbConnection();
+
+    std::list<DbTableDesc> tbls;
+    if ( cntScs ) 
+    {
+      tbls = dbC.get()->queryTableDesc();
+    }
+
+    std::wcout << std::endl << L"Test-Ausgabe:" << std::endl;
+    
+    for ( DbTableDesc tbl : tbls  )
+    {
+      std::wcout << tbl.tblName << L'(' <<  tbl.tblType << L')' << std::endl;
+
+      for ( DbColDesc cl : tbl.tblCols  )
+      {
+	 std::wcout << cl.colName
+		    << L" - " << cl.colType
+	            << L'(' <<  cl.colLength << L')'
+	            << L" Default: " << cl.colDefaultVal
+	            << L" Nullable: " << cl.colNullable
+		    << std::endl;
+      }	
+    }
 
     return 0;
 }

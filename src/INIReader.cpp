@@ -12,6 +12,7 @@
 #include "INIReader.h"
 
 using std::string;
+using std::wstring;
 
 INIReader::INIReader(const string& filename)
 {

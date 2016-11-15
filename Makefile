@@ -5,6 +5,7 @@
 CC := g++
 CCC := gcc
 CFLAGS := -c -Wall
+CPPFLAGS := -std=c++14
 TARGET := dbWatson
 
 SRCDIR := src
@@ -41,7 +42,7 @@ $(BINDIR)/$(TARGET): $(OBJFILES)
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	mkdir -p $(OBJDIR)
-	$(CC) $(CFLAGS) -I$(INCDIR) $(IPATHS)  $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) -I$(INCDIR) $(IPATHS)  $< -o $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	mkdir -p $(OBJDIR)
