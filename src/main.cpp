@@ -36,6 +36,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "INIReader.h"
 #include "DbConnector.h"
 #include "common.h"
+#include "XMLExporter.h"
 
 std::map<std::wstring, DbType> dbTypeMapping {
   { L"postgres", DbType::postgres }
@@ -93,6 +94,10 @@ int main(
     {
       tbls = dbC.get()->queryTableDesc();
     }
+
+    //Export
+    XMLExporter exp( tbls );
+    exp.exportToFS();
     
     std::wcout << std::endl << L"Test-Ausgabe:" << std::endl;
     
