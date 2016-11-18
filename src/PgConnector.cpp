@@ -1,7 +1,7 @@
 /*
 dbWatson
 Database Structur Exporter
-https://github.com/Zer0Knowdlege/dbWatson
+https://github.com/Zer0Knowledge/dbWatson
 
 BSD 2-Clause License
 
@@ -47,9 +47,6 @@ PgConnector::initDbConnection()
   std::wstring cntStr = buildCntStr();
 
   //libpq won't take wstring
-  using cvt_type = std::codecvt_utf8<wchar_t>;
-  std::wstring_convert<cvt_type, wchar_t> cvt;
-
   std::string cntStrAnsi = wstring_tostring( cntStr );
   
   this->m_cnt = PQconnectdb( cntStrAnsi.c_str() );
@@ -71,7 +68,7 @@ PgConnector::queryTableDesc()
                          "WHERE table_schema NOT IN ("
                          " 'pg_catalog',"
                          " 'information_schema'"
-                         ");";
+                         ");\0";
   
   std::list<DbTableDesc> tbls;
 

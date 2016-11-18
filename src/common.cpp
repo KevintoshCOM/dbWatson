@@ -1,7 +1,7 @@
 /*
 dbWatson
 Database Structur Exporter
-https://github.com/Zer0Knowdlege/dbWatson
+https://github.com/Zer0Knowledge/dbWatson
 
 BSD 2-Clause License
 
@@ -35,27 +35,41 @@ POSSIBILITY OF SUCH DAMAGE.
 
 std::wstring
 char_towstring(
-    char* str )
+    const char* str )
 {
-    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
 
     return cnv.from_bytes( std::string( str ) );
 }
 
 std::wstring
 string_towstring(
-    std::string str )
+    const std::string& str )
 {
-    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
 
     return cnv.from_bytes( str );
 }
 
 std::string
 wstring_tostring(
-    std::wstring wstr )
+    const std::wstring& wstr )
 {
-    std::wstring_convert< std::codecvt_utf8_utf16<wchar_t>> cnv;
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
 
     return cnv.to_bytes( wstr );
+}
+
+unsigned char[]
+wstring_toxmlChar(
+    const std::wstring& wstr )
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> cnv;
+
+    std::string str( cnv.to_bytes( wstr ) );
+	unsigned char retVal[ str.length() + 1 ] = {0};
+	
+	std::copy( str.begin(), str.end(), retVal );
+	
+	return retVal;	
 }

@@ -1,7 +1,7 @@
 /*
 dbWatson
 Database Structur Exporter
-https://github.com/Zer0Knowdlege/dbWatson
+https://github.com/Zer0Knowledge/dbWatson
 
 BSD 2-Clause License
 
@@ -33,8 +33,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-std::wstring char_towstring( char* str );
-std::wstring string_towstring( std::string str );
-std::string wstring_tostring( std::wstring wstr );
+std::wstring char_towstring( const char* str );
+std::wstring string_towstring( const std::string& str );
+std::string wstring_tostring( const std::wstring& wstr );
+unsigned char[] wstring_toxmlChar( const std::wstring& wstr );
 
 #endif //COMMON_H
