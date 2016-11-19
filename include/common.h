@@ -36,6 +36,6 @@ POSSIBILITY OF SUCH DAMAGE.
 std::wstring char_towstring( const char* str );
 std::wstring string_towstring( const std::string& str );
 std::string wstring_tostring( const std::wstring& wstr );
-unsigned char[] wstring_toxmlChar( const std::wstring& wstr );
+void wstring_toxmlChar( const std::wstring& wstr, unsigned char xmlChar[] );
 
 #endif //COMMON_H

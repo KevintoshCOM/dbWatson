@@ -60,16 +60,14 @@ wstring_tostring(
     return cnv.to_bytes( wstr );
 }
 
-unsigned char[]
+void
 wstring_toxmlChar(
-    const std::wstring& wstr )
+    const std::wstring& wstr,
+	unsigned char xmlChar[] )
 {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> cnv;
 
     std::string str( cnv.to_bytes( wstr ) );
-	unsigned char retVal[ str.length() + 1 ] = {0};
 	
-	std::copy( str.begin(), str.end(), retVal );
-	
-	return retVal;	
+	std::copy( str.begin(), str.end(), xmlChar );
 }
