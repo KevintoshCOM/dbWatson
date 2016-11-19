@@ -63,11 +63,11 @@ wstring_tostring(
 void
 wstring_toxmlChar(
     const std::wstring& wstr,
-	unsigned char xmlChar[] )
+	std::vector<unsigned char>& vec )
 {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> cnv;
 
     std::string str( cnv.to_bytes( wstr ) );
 	
-	std::copy( str.begin(), str.end(), xmlChar );
+	vec = std::vector<unsigned char>( str.begin(), str.end() );
 }
