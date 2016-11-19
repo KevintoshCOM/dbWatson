@@ -68,6 +68,6 @@ wstring_toxmlChar(
     std::wstring_convert<std::codecvt_utf8<wchar_t>> cnv;
 
     std::string str( cnv.to_bytes( wstr ) );
-	
-	vec = std::vector<unsigned char>( str.begin(), str.end() );
+    
+    vec = std::vector<unsigned char>( str.begin(), str.end() );
 }

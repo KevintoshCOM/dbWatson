@@ -33,8 +33,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <libxml/encoding.h>
 #include <libxml/xmlwriter.h>
+#include <vector>
 
 #include "XMLExporter.h"
+#include "common.h"
 
 #define MY_ENCODING "UTF-8"
 
@@ -48,6 +50,7 @@ XMLExporter::exportToFS()
   int rc;
   xmlTextWriterPtr writer;
   xmlChar *tmp;
+  std::vector<xmlChar> chars;
 
     /* Create a new XmlWriter for uri, with no compression. */
     writer = xmlNewTextWriterFilename("test.xml", 0);
@@ -79,9 +82,10 @@ XMLExporter::exportToFS()
      * Please observe, that the input to the xmlTextWriter functions
      * HAS to be in UTF-8, even if the output XML is encoded
      * in iso-8859-1 */
+    wstring_toxmlChar( L"This is a comment with special chars: <äöü>", chars );
     tmp = ConvertInput("This is a comment with special chars: <äöü>",
                        MY_ENCODING);
-    rc = xmlTextWriterWriteComment(writer, tmp);
+    rc = xmlTextWriterWriteComment(writer, &chars[0]);
     if (rc < 0) {
         printf
             ("testXmlwriterFilename: Error at xmlTextWriterWriteComment\n");
