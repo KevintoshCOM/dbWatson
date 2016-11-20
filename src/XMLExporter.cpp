@@ -30,9 +30,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 #include <stdio.h>
-#include <string>
 #include <libxml/encoding.h>
-#include <libxml/xmlwriter.h>
+
 #include <vector>
 
 #include "XMLExporter.h"
@@ -132,6 +131,7 @@ XMLExporter::writeElem(
 	const char* tag,
 	std::wstring val )
 {
+  int rc;
 	std::vector<xmlChar> encBuffer;
 	
 	wstring_toxmlChar( val, encBuffer );

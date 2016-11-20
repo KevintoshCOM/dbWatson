@@ -32,6 +32,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #define XMLEXPORTER_H
 
 #include <list>
+#include <string>
+#include <libxml/xmlwriter.h>
 
 #include "DbConnector.h"
 
