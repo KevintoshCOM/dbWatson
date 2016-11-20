@@ -31,6 +31,3 @@
 #dirs
 bin/*
 obj/*
-
-#test
-test/dbWatson.ini

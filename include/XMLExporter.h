@@ -28,47 +28,23 @@ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED O
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <locale>
-#include <codecvt>
+#ifndef XMLEXPORTER_H
+#define XMLEXPORTER_H
 
-#include "common.h"
+#include <list>
+#include <string>
+#include <libxml/xmlwriter.h>
 
-std::wstring
-char_towstring(
-    const char* str )
-{
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
+#include "DbConnector.h"
 
-    return cnv.from_bytes( std::string( str ) );
-}
+class XMLExporter {
+ public:
+  XMLExporter( std::list<DbTableDesc> tbls ) :m_tbls{tbls} {};
+  void exportToFS();
+ private:
+  std::list<DbTableDesc> m_tbls;
+  
+  void writeElem( xmlTextWriterPtr writer, const char* tag, std::wstring val );
+};
 
-std::wstring
-string_towstring(
-    const std::string& str )
-{
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
-
-    return cnv.from_bytes( str );
-}
-
-std::string
-wstring_tostring(
-    const std::wstring& wstr )
-{
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> cnv;
-
-    return cnv.to_bytes( wstr );
-}
-
-void
-wstring_toxmlChar(
-    const std::wstring& wstr,
-	std::vector<unsigned char>& vec )
-{
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> cnv;
-
-    std::string str( cnv.to_bytes( wstr ) );
-    
-    vec = std::vector<unsigned char>( str.begin(), str.end() );
-    vec.push_back( '\0' );
-}
+#endif //XMLEXPORTER_H
