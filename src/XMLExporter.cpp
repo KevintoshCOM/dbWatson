@@ -49,26 +49,26 @@ XMLExporter::exportToFS()
 	for ( DbTableDesc tbl : this->m_tbls  )
     {
 
-                std::string uri = wstring_tostring( tbl.tblName );
+        std::string uri = wstring_tostring( tbl.tblName );
 		uri.append( ".xml" );
 				       
 		writer = xmlNewTextWriterFilename( uri.c_str(), 0 );
 		if ( writer == NULL ) {
-			std::cerr << "testXmlwriterFilename: Error creating the xml writer\n";
+			std::cerr << "xmlWriter: Error creating the xml writer\n";
 			
 			return;
 		}
 		
 		rc = xmlTextWriterStartDocument( writer, NULL, "UTF-8", NULL );
 		if ( rc < 0 ) {
-			std::cerr << "testXmlwriterFilename: Error at xmlTextWriterStartDocument\n";
+			std::cerr << "xmlWriter: Error at xmlTextWriterStartDocument\n";
 			
 			return;
 		}
 		
 		rc = xmlTextWriterStartElement( writer, BAD_CAST "table" );
 		if ( rc < 0 ) {
-			std::cerr << "testXmlwriterFilename: Error at xmlTextWriterStartElement\n";
+			std::cerr << "xmlWriter: Error at xmlTextWriterStartElement\n";
 			
 			return;
 		}
@@ -76,36 +76,91 @@ XMLExporter::exportToFS()
 		wstring_toxmlChar( tbl.tblName, encBuffer );
 		rc = xmlTextWriterWriteElement( writer, BAD_CAST "tablename", &encBuffer[0] );
 		if ( rc < 0 ) {
-			std::cerr << "testXmlwriterFilename: Error at xmlTextWriterWriteElement\n";
+			std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
 			
 			return;
 		}
 		
 		wstring_toxmlChar( tbl.tblType, encBuffer );
-		rc = xmlTextWriterWriteElement( writer, BAD_CAST "tabletyp", &encBuffer[0] );
+		rc = xmlTextWriterWriteElement( writer, BAD_CAST "tabletype", &encBuffer[0] );
 		if ( rc < 0 ) {
-			std::cerr << "testXmlwriterFilename: Error at xmlTextWriterWriteElement\n";
+			std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
 			
 			return;
 		}
 		
 		rc = xmlTextWriterEndDocument( writer );
 		if ( rc < 0 ) {
-			std::cerr << "testXmlwriterFilename: Error at xmlTextWriterEndDocument\n";
+			std::cerr << "xmlWriter: Error at xmlTextWriterEndDocument\n";
 			
 			return;
 		}
 
-		xmlFreeTextWriter(writer);
+		rc = xmlTextWriterStartElement( writer, BAD_CAST "columns" );
+		if ( rc < 0 ) {
+			std::cerr << "xmlWriter: Error at xmlTextWriterStartElement\n";
+			return;
+		}
 
 		for ( DbColDesc cl : tbl.tblCols  )
 		{
-			std::wcout << cl.colName
-			<< L" - " << cl.colType
-			<< L'(' <<  cl.colLength << L')'
-			<< L" Default: " << cl.colDefaultVal
-			<< L" Nullable: " << cl.colNullable
-			<< std::endl;
-		}	
+			rc = xmlTextWriterStartElement( writer, BAD_CAST "column" );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterStartElement\n";
+				return;
+			}
+			
+			wstring_toxmlChar( cl.colName, encBuffer );
+			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnname", &encBuffer[0] );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+				
+				return;
+			}
+			
+			wstring_toxmlChar( cl.colType, encBuffer );
+			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columntype", &encBuffer[0] );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+				
+				return;
+			}
+			
+			wstring_toxmlChar( cl.colLength, encBuffer );
+			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnlength", &encBuffer[0] );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+				
+				return;
+			}
+			
+			wstring_toxmlChar( cl.colDefaultVal, encBuffer );
+			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columndefaultval", &encBuffer[0] );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+				
+				return;
+			}
+			
+			wstring_toxmlChar( cl.colNullable, encBuffer );
+			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnnullable", &encBuffer[0] );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+				
+				return;
+			}
+			
+			/* Close Column */
+			rc = xmlTextWriterEndElement( writer );
+			if ( rc < 0 ) {
+				std::cerr << "xmlWriter: Error at xmlTextWriterEndElement\n";
+				
+				return;
+			}
+		}
+
+		//**Zer0Knowledge
+		//closes all tags 
+		xmlFreeTextWriter(writer);
     }
 }
