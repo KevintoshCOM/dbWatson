@@ -73,29 +73,9 @@ XMLExporter::exportToFS()
 			return;
 		}
 		
-		wstring_toxmlChar( tbl.tblName, encBuffer );
-		rc = xmlTextWriterWriteElement( writer, BAD_CAST "tablename", &encBuffer[0] );
-		if ( rc < 0 ) {
-			std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-			
-			return;
-		}
+		XMLExporter::writeElem( writer, "tablename", tbl.tblName );
+		XMLExporter::writeElem( writer, "tabletype", tbl.tblType );
 		
-		wstring_toxmlChar( tbl.tblType, encBuffer );
-		rc = xmlTextWriterWriteElement( writer, BAD_CAST "tabletype", &encBuffer[0] );
-		if ( rc < 0 ) {
-			std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-			
-			return;
-		}
-		
-		rc = xmlTextWriterEndDocument( writer );
-		if ( rc < 0 ) {
-			std::cerr << "xmlWriter: Error at xmlTextWriterEndDocument\n";
-			
-			return;
-		}
-
 		rc = xmlTextWriterStartElement( writer, BAD_CAST "columns" );
 		if ( rc < 0 ) {
 			std::cerr << "xmlWriter: Error at xmlTextWriterStartElement\n";
@@ -110,44 +90,18 @@ XMLExporter::exportToFS()
 				return;
 			}
 			
-			wstring_toxmlChar( cl.colName, encBuffer );
-			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnname", &encBuffer[0] );
-			if ( rc < 0 ) {
-				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-				
-				return;
-			}
+			XMLExporter::writeElem( writer, "columnname", cl.colName );
+			XMLExporter::writeElem( writer, "columntype", cl.colType );
+			XMLExporter::writeElem( writer, "columnlength", cl.colLength );
+			XMLExporter::writeElem( writer, "columndefaultval", cl.colDefaultVal );
 			
-			wstring_toxmlChar( cl.colType, encBuffer );
-			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columntype", &encBuffer[0] );
-			if ( rc < 0 ) {
-				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-				
-				return;
+			if ( cl.colNullable )
+			{
+				XMLExporter::writeElem( writer, "columnnullable", L"yes" );
 			}
-			
-			wstring_toxmlChar( cl.colLength, encBuffer );
-			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnlength", &encBuffer[0] );
-			if ( rc < 0 ) {
-				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-				
-				return;
-			}
-			
-			wstring_toxmlChar( cl.colDefaultVal, encBuffer );
-			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columndefaultval", &encBuffer[0] );
-			if ( rc < 0 ) {
-				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-				
-				return;
-			}
-			
-			wstring_toxmlChar( cl.colNullable, encBuffer );
-			rc = xmlTextWriterWriteElement( writer, BAD_CAST "columnnullable", &encBuffer[0] );
-			if ( rc < 0 ) {
-				std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
-				
-				return;
+			else
+			{
+				XMLExporter::writeElem( writer, "columnnullable", L"no" );
 			}
 			
 			/* Close Column */
@@ -160,7 +114,31 @@ XMLExporter::exportToFS()
 		}
 
 		//**Zer0Knowledge
-		//closes all tags 
+		//closes all tags
+		rc = xmlTextWriterEndDocument( writer );
+		if ( rc < 0 ) {
+			std::cerr << "xmlWriter: Error at xmlTextWriterEndDocument\n";
+			
+			return;
+		}
+		
 		xmlFreeTextWriter(writer);
     }
+}
+
+void
+XMLExporter::writeElem(
+	xmlTextWriterPtr writer,
+	const char* tag,
+	std::wstring val )
+{
+	std::vector<xmlChar> encBuffer;
+	
+	wstring_toxmlChar( val, encBuffer );
+	rc = xmlTextWriterWriteElement( writer, BAD_CAST tag, &encBuffer[0] );
+	if ( rc < 0 ) {
+		std::cerr << "xmlWriter: Error at xmlTextWriterWriteElement\n";
+		
+		return;
+	}
 }

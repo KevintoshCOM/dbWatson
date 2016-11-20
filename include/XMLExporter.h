@@ -41,6 +41,8 @@ class XMLExporter {
   void exportToFS();
  private:
   std::list<DbTableDesc> m_tbls;
+  
+  void writeElem( xmlTextWriterPtr writer, const char* tag, std::wstring val );
 };
 
 #endif //XMLEXPORTER_H
