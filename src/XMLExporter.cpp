@@ -30,7 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 #include <libxml/encoding.h>
 #include <libxml/xmlwriter.h>
 #include <vector>
@@ -44,13 +44,15 @@ XMLExporter::exportToFS()
 {  
   int rc;
   xmlTextWriterPtr writer;
-  xmlChar *tmp;
   std::vector<xmlChar> encBuffer;
   
 	for ( DbTableDesc tbl : this->m_tbls  )
     {
-		
-		writer = xmlNewTextWriterFilename( wstring_tostring( tbl.tblName ).c_str(), 0 );
+
+                std::string uri = wstring_tostring( tbl.tblName );
+		uri.append( ".xml" );
+				       
+		writer = xmlNewTextWriterFilename( uri.c_str(), 0 );
 		if ( writer == NULL ) {
 			std::cerr << "testXmlwriterFilename: Error creating the xml writer\n";
 			

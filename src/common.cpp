@@ -70,4 +70,5 @@ wstring_toxmlChar(
     std::string str( cnv.to_bytes( wstr ) );
     
     vec = std::vector<unsigned char>( str.begin(), str.end() );
+    vec.push_back( '\0' );
 }
