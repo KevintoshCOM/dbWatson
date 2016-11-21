@@ -1,7 +1,7 @@
 /*
 dbWatson
 Database Structur Exporter
-https://github.com/Zer0Knowdlege/dbWatson
+https://github.com/Zer0Knowledge/dbWatson
 
 BSD 2-Clause License
 
@@ -38,10 +38,19 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "common.h"
 #include "XMLExporter.h"
 
+//Map a string to the enum value
 std::map<std::wstring, DbType> dbTypeMapping {
   { L"postgres", DbType::postgres }
 };
 
+/*
+ * Function: main
+ * ----------------------------
+ * Entry
+ * 
+ * argc ... argument count
+ * argv ... argument values
+ */
 int main(
     int argc,
     char* argv[] )
@@ -68,11 +77,11 @@ int main(
     }
 
     DbData dbd = {
-      string_towstring( reader.Get( "default", "dbServer", "UNKNOWN" ) ),
-      reader.GetInteger( "default", "dbPort", -1 ),
-      string_towstring( reader.Get( "default", "dbName", "UNKNOWN" ) ),
-      string_towstring( reader.Get( "default", "dbUsr", "UNKNOWN" ) ),
-      string_towstring( reader.Get( "default", "dbPasswd", "UNKNOWN" ) )
+		string_towstring( reader.Get( "default", "dbServer", "UNKNOWN" ) ),
+		reader.GetInteger( "default", "dbPort", -1 ),
+		string_towstring( reader.Get( "default", "dbName", "UNKNOWN" ) ),
+		string_towstring( reader.Get( "default", "dbUsr", "UNKNOWN" ) ),
+		string_towstring( reader.Get( "default", "dbPasswd", "UNKNOWN" ) )
     };
     
     std::unique_ptr<DbConnector> dbC;
@@ -80,11 +89,11 @@ int main(
     switch( dbt ) 
     {
     case DbType::postgres:
-      dbC = std::make_unique<PgConnector>( dbd );
-      break;
+		dbC = std::make_unique<PgConnector>( dbd );
+		break;
     default:
-      std::cout << "Implementation Error!";
-      return 1;
+		std::cout << "Implementation Error!";
+		return 1;
     };
     
     bool cntScs = dbC.get()->initDbConnection();
@@ -92,29 +101,12 @@ int main(
     std::list<DbTableDesc> tbls;
     if ( cntScs ) 
     {
-      tbls = dbC.get()->queryTableDesc();
+		tbls = dbC.get()->queryTableDesc();
     }
 
     //Export
     XMLExporter exp( tbls );
     exp.exportToFS();
-    
-    std::wcout << std::endl << L"Test-Ausgabe:" << std::endl;
-    
-    for ( DbTableDesc tbl : tbls  )
-    {
-      std::wcout << tbl.tblName << L'(' <<  tbl.tblType << L')' << std::endl;
-
-      for ( DbColDesc cl : tbl.tblCols  )
-      {
-	 std::wcout << cl.colName
-		    << L" - " << cl.colType
-	            << L'(' <<  cl.colLength << L')'
-	            << L" Default: " << cl.colDefaultVal
-	            << L" Nullable: " << cl.colNullable
-		    << std::endl;
-      }	
-    }
-
+	
     return 0;
 }

@@ -40,11 +40,11 @@ POSSIBILITY OF SUCH DAMAGE.
 class XMLExporter {
  public:
   XMLExporter( std::list<DbTableDesc> tbls ) :m_tbls{tbls} {};
-  void exportToFS();
+  void exportToFS() const;
  private:
   std::list<DbTableDesc> m_tbls;
   
-  void writeElem( xmlTextWriterPtr writer, const char* tag, std::wstring val );
+  void writeElem( xmlTextWriterPtr writer, const char* tag, std::wstring val ) const;
 };
 
 #endif //XMLEXPORTER_H
