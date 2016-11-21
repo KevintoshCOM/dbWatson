@@ -70,12 +70,12 @@ class DbConnector {
   explicit DbConnector( DbData dbData ) :dbData{dbData} {};
   virtual ~DbConnector() {};
   virtual bool initDbConnection() = 0;
-  virtual std::list<DbTableDesc> queryTableDesc() = 0;
+  virtual std::list<DbTableDesc> queryTableDesc() = 0 const;
  protected:
   DbData dbData;
   
-  virtual std::wstring buildCntStr() = 0;
-  virtual bool isConnected() = 0;
+  virtual std::wstring buildCntStr() = 0 const;
+  virtual bool isConnected() = 0 const;
 };
 
 class PgConnector : public DbConnector {
@@ -84,11 +84,11 @@ class PgConnector : public DbConnector {
  public:
   ~PgConnector();
   bool initDbConnection() override;
-  std::list<DbTableDesc> queryTableDesc() override;
+  std::list<DbTableDesc> queryTableDesc() const override;
  protected:
-  std::wstring buildCntStr() override;
-  bool isConnected() override;
-  std::list<DbColDesc> queryColDesc( std::wstring tblName );
+  std::wstring buildCntStr() const override;
+  bool isConnected() const override;
+  std::list<DbColDesc> queryColDesc( std::wstring tblName ) const;
  private:
   PGconn* m_cnt;
 };

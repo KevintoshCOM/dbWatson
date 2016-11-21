@@ -43,9 +43,9 @@ POSSIBILITY OF SUCH DAMAGE.
 void
 XMLExporter::exportToFS() const
 {  
-  int rc;
-  xmlTextWriterPtr writer;
-  std::vector<xmlChar> encBuffer;
+	int rc;
+	xmlTextWriterPtr writer;
+	std::vector<xmlChar> encBuffer;
   
 	for ( DbTableDesc tbl : this->m_tbls  )
     {
@@ -141,7 +141,7 @@ XMLExporter::writeElem(
 	const char* tag,
 	std::wstring val ) const
 {
-    int rc;
+	int rc;
 	std::vector<xmlChar> encBuffer;
 	
 	wstring_toxmlChar( val, encBuffer );
