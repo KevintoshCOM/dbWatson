@@ -70,12 +70,12 @@ class DbConnector {
   explicit DbConnector( DbData dbData ) :dbData{dbData} {};
   virtual ~DbConnector() {};
   virtual bool initDbConnection() = 0;
-  virtual std::list<DbTableDesc> queryTableDesc() = 0 const;
+  virtual std::list<DbTableDesc> queryTableDesc() const = 0;
  protected:
   DbData dbData;
   
-  virtual std::wstring buildCntStr() = 0 const;
-  virtual bool isConnected() = 0 const;
+  virtual std::wstring buildCntStr() const = 0;
+  virtual bool isConnected() const = 0;
 };
 
 class PgConnector : public DbConnector {
