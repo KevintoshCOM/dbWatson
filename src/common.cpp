@@ -33,6 +33,15 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "common.h"
 
+/*
+ * Function: char_towstring
+ * ----------------------------
+ * Convert const char* to wstring
+ * 
+ * str ... the const char*
+ *
+ * Returns the wstring
+ */
 std::wstring
 char_towstring(
     const char* str )
@@ -42,6 +51,15 @@ char_towstring(
     return cnv.from_bytes( std::string( str ) );
 }
 
+/*
+ * Function: string_towstring
+ * ----------------------------
+ * Convert string to wstring
+ * 
+ * str ... the string
+ *
+ * Returns the wstring
+ */
 std::wstring
 string_towstring(
     const std::string& str )
@@ -51,6 +69,15 @@ string_towstring(
     return cnv.from_bytes( str );
 }
 
+/*
+ * Function: wstring_tostring
+ * ----------------------------
+ * Convert wstring to string
+ * 
+ * wstr ... the wstring
+ *
+ * Returns the string
+ */
 std::string
 wstring_tostring(
     const std::wstring& wstr )
@@ -60,6 +87,14 @@ wstring_tostring(
     return cnv.to_bytes( wstr );
 }
 
+/*
+ * Function: char_towstring
+ * ----------------------------
+ * Convert const char* to wstring
+ * 
+ * wstr ... the wstring
+ * vec  ... the xmlchar buffer
+ */
 void
 wstring_toxmlChar(
     const std::wstring& wstr,
