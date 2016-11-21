@@ -35,8 +35,13 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "common.h"
 #include "DbConnector.h"
 
+/*
+ * Function: exportToFS
+ * ----------------------------
+ * Writes the table structs into xml files
+ */
 void
-XMLExporter::exportToFS()
+XMLExporter::exportToFS() const
 {  
   int rc;
   xmlTextWriterPtr writer;
@@ -44,7 +49,6 @@ XMLExporter::exportToFS()
   
 	for ( DbTableDesc tbl : this->m_tbls  )
     {
-
         std::string uri = wstring_tostring( tbl.tblName );
 		uri.append( ".xml" );
 				       
@@ -69,8 +73,8 @@ XMLExporter::exportToFS()
 			return;
 		}
 		
-		XMLExporter::writeElem( writer, "tablename", tbl.tblName );
-		XMLExporter::writeElem( writer, "tabletype", tbl.tblType );
+		writeElem( writer, "tablename", tbl.tblName );
+		writeElem( writer, "tabletype", tbl.tblType );
 		
 		rc = xmlTextWriterStartElement( writer, BAD_CAST "columns" );
 		if ( rc < 0 ) {
@@ -86,18 +90,18 @@ XMLExporter::exportToFS()
 				return;
 			}
 			
-			XMLExporter::writeElem( writer, "columnname", cl.colName );
-			XMLExporter::writeElem( writer, "columntype", cl.colType );
-			XMLExporter::writeElem( writer, "columnlength", cl.colLength );
-			XMLExporter::writeElem( writer, "columndefaultval", cl.colDefaultVal );
+			writeElem( writer, "columnname", cl.colName );
+			writeElem( writer, "columntype", cl.colType );
+			writeElem( writer, "columnlength", cl.colLength );
+			writeElem( writer, "columndefaultval", cl.colDefaultVal );
 			
 			if ( cl.colNullable )
 			{
-				XMLExporter::writeElem( writer, "columnnullable", L"yes" );
+				writeElem( writer, "columnnullable", L"yes" );
 			}
 			else
 			{
-				XMLExporter::writeElem( writer, "columnnullable", L"no" );
+				writeElem( writer, "columnnullable", L"no" );
 			}
 			
 			/* Close Column */
@@ -122,11 +126,20 @@ XMLExporter::exportToFS()
     }
 }
 
+/*
+ * Function: writeElem
+ * ----------------------------
+ * Writes a tag to the xml writer
+ *
+ * writer ... the XMLWriter to write to
+ * tag	  ... the name of the xml tag
+ * val    ... the value of the xml tag
+ */
 void
 XMLExporter::writeElem(
 	xmlTextWriterPtr writer,
 	const char* tag,
-	std::wstring val )
+	std::wstring val ) const
 {
     int rc;
 	std::vector<xmlChar> encBuffer;
