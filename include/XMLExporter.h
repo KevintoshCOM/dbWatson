@@ -1,3 +1,8 @@
+/*
+dbWatson
+Database Structur Exporter
+https://github.com/Zer0Knowledge/dbWatson
+
 BSD 2-Clause License
 
 Copyright (c) 2016  | Kevin Klein, Tobias Donix, Leonard Franke
@@ -21,3 +26,25 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#ifndef XMLEXPORTER_H
+#define XMLEXPORTER_H
+
+#include <list>
+#include <string>
+#include <libxml/xmlwriter.h>
+
+#include "DbConnector.h"
+
+class XMLExporter {
+ public:
+  XMLExporter( std::list<DbTableDesc> tbls ) :m_tbls{tbls} {};
+  void exportToFS() const;
+ private:
+  std::list<DbTableDesc> m_tbls;
+  
+  void writeElem( xmlTextWriterPtr writer, const char* tag, std::wstring val ) const;
+};
+
+#endif //XMLEXPORTER_H

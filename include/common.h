@@ -1,3 +1,8 @@
+/*
+dbWatson
+Database Structur Exporter
+https://github.com/Zer0Knowledge/dbWatson
+
 BSD 2-Clause License
 
 Copyright (c) 2016  | Kevin Klein, Tobias Donix, Leonard Franke
@@ -21,3 +26,17 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#ifndef COMMON_H
+#define COMMON_H 
+
+#include <string>
+#include <vector>
+
+std::wstring char_towstring( const char* str );
+std::wstring string_towstring( const std::string& str );
+std::string wstring_tostring( const std::wstring& wstr );
+void wstring_toxmlChar( const std::wstring& wstr, std::vector<unsigned char>& vec );
+
+#endif //COMMON_H
