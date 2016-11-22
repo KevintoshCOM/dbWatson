@@ -2,8 +2,8 @@
 
 ### Zweck
 
-Das in C++ entwicklete CMD-Tool __dbWatson__ ermöglicht es Strukturinformationen einer Datenbank auszulesen und als XML-Datei auszugeben. Dies beinhaltet Tabellennamen und -typ sowie Name, Länge, Typ und Nullbarkeit der jweiligen Spalten.
-Gerade bei konmplexen Datenbanken kann dbWatson helfen, die Datenstrukturen zu dokumentieren. Dies kann eine wertvolle Hilfe für bereits existierende Datenbanken sein.
+Das in C++ entwickelte CMD-Tool __dbWatson__ ermöglicht es Strukturinformationen einer Datenbank auszulesen und als XML-Datei auszugeben. Dies beinhaltet Tabellennamen und -typ sowie Name, Länge, Typ und Nullbarkeit der jeweiligen Spalten.
+Gerade bei komplexen Datenbanken kann dbWatson helfen, die Datenstrukturen zu dokumentieren. Dies kann eine wertvolle Hilfe für bereits existierende Datenbanken sein.
 
 ### Entwickler
 
