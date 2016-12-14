@@ -68,6 +68,10 @@ typedef struct pg_conn PGconn;
 class DbConnector {
  public:
   explicit DbConnector( DbData dbData ) :dbData{dbData} {};
+  DbConnector(const DbConnector&) =delete; //no copy
+  DbConnector& operator=(const DbConnector&) =delete; //no copy
+  DbConnector(DbConnector&&) =delete; //no move
+  DbConnector& operator=(DbConnector&&) =delete; //no move
   virtual ~DbConnector() {};
   virtual bool initDbConnection() = 0;
   virtual std::list<DbTableDesc> queryTableDesc() const = 0;
