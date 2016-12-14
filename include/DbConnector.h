@@ -68,7 +68,7 @@ typedef struct pg_conn PGconn;
 class DbConnector {
  public:
   explicit DbConnector( DbData dbData ) :dbData{dbData} {};
-  Dbconnector(const DbConnector&) =delete; //no copy
+  DbConnector(const DbConnector&) =delete; //no copy
   DbConnector& operator=(const DbConnector&) =delete; //no copy
   DbConnector(DbConnector&&) =delete; //no move
   DbConnector& operator=(DbConnector&&) =delete; //no move
